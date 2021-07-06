@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="tiny" width="634.5" height="580.5" viewBox="-0.75 -0.75 23.5 21.5" fill="none" stroke="#000000" stroke-linejoin="round" stroke-linecap="round" stroke-width="0.5">
+    <title>12664. belt,sash</title>
+    <desc>https://www.xelify.se/blissdictionary</desc>
+    <rect x="-0.75" y="-0.75" width="100%" height="100%" stroke="none" fill="#f5eb82"/>
+    <path d="M1,8V16"></path><path d="M0,4H2M0,6H2M0,4V6M2,4V6"></path><path d="M8,8a5,5 0 0,0 0,8M8,8H16M8,16H16M16,8a5,5 0 0,1 0,8M3,10L5,12M3,14L5,12M19,12L21,10M19,12L21,14"></path>
+</svg>
