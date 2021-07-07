@@ -18,7 +18,12 @@ data class Symbol(
 
 data class HSymbol(
     var gloss:String="",
-    var id:Int = -1
+    var id:Int = -1,
+    var filename:String ="",
+    var isCharacter:Boolean = false,
+    var isWord:Boolean = false,
+//    var isSequenced:Boolean = false,
+ //   var isModified:Boolean = false
 )
 
 suspend fun main() = Korge(width = 1800, height = 900, bgcolor = Colors["#2b2b2b"]) {
@@ -28,7 +33,7 @@ suspend fun main() = Korge(width = 1800, height = 900, bgcolor = Colors["#2b2b2b
     val parsedList = parseJSONtoDataList()
 
     for (index in 0 .. parsedList.lastIndex) {
-        println("Glossary: ${parsedList[index].gloss}  #id: ${parsedList[index].id}")
+        println("Symbol:   ${parsedList[index]} ")
         // println first 100 symbols
         if (index > 100) break
     }
@@ -44,6 +49,11 @@ private suspend fun parseJSONtoDataList():List<HSymbol> {
         for (item in symbol) {
             when (item.key.toString()) {
                 "gloss" -> newSymbol.gloss = item.value.toString()
+                "filename" -> newSymbol.filename = item.value.toString()
+                "isCharacter" -> newSymbol.isCharacter = item.value.toString().toBooleanStrictOrNull()?:false
+                "isWord" -> newSymbol.isWord = item.value.toString().toBooleanStrictOrNull()?:false
+      //          "isSequenced" -> newSymbol.isWord = item.value.toString().toBooleanStrictOrNull()?:false
+       //         "isModified" -> newSymbol.isWord = item.value.toString().toBooleanStrictOrNull()?:false
                 // if id is not parsed properly we assign -1
                 "id" -> newSymbol.id = item.value.toString().toIntOrNull() ?: -1
             }
