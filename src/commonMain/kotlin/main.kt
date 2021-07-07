@@ -1,16 +1,12 @@
+import com.soywiz.klock.DateTime
 import com.soywiz.korge.Korge
-import com.soywiz.korge.annotations.KorgeExperimental
-import com.soywiz.korge.resources.resources
-import com.soywiz.korge.ui.uiTextInput
-import com.soywiz.korge.view.image
-import com.soywiz.korge.view.position
 import com.soywiz.korim.color.Colors
-import com.soywiz.korim.format.*
-import com.soywiz.korim.vector.*
 import com.soywiz.korio.file.std.localVfs
 import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korio.serialization.json.fromJson
 import com.soywiz.korio.serialization.json.toJson
 import com.soywiz.korio.serialization.xml.Xml
+import kotlin.random.Random
 
 
 data class Symbol(
@@ -20,10 +16,43 @@ data class Symbol(
     var path:String = "M0,0"
 )
 
-@OptIn(KorgeExperimental::class)
+data class HSymbol(
+    var gloss:String="",
+    var id:Int = -1
+)
+
 suspend fun main() = Korge(width = 1800, height = 900, bgcolor = Colors["#2b2b2b"]) {
 
+    //svgFilesToSymbolsJSON()
 
+    val parsedList = parseJSONtoDataList()
+
+    for (index in 0 .. parsedList.lastIndex) {
+        println("Glossary: ${parsedList[index].gloss}  #id: ${parsedList[index].id}")
+        // println first 100 symbols
+        if (index > 100) break
+    }
+
+}
+
+private suspend fun parseJSONtoDataList():List<HSymbol> {
+    val hJSON = resourcesVfs["blisswords.json"].readString()
+    val rawMap = hJSON.fromJson() as List<Map<*, *>>
+
+    return rawMap.map { symbol ->
+        val newSymbol = HSymbol()
+        for (item in symbol) {
+            when (item.key.toString()) {
+                "gloss" -> newSymbol.gloss = item.value.toString()
+                // if id is not parsed properly we assign -1
+                "id" -> newSymbol.id = item.value.toString().toIntOrNull() ?: -1
+            }
+        }
+        newSymbol
+    }
+}
+
+private suspend fun svgFilesToSymbolsJSON() {
     val symDir = resourcesVfs["symbols"].listNames()
     val symbolsList = extractSymInfo(symDir)
 
@@ -39,9 +68,8 @@ suspend fun main() = Korge(width = 1800, height = 900, bgcolor = Colors["#2b2b2b
     }
 
     val outputJSON= outMapJSON.toJson(true)
- 
-    localVfs("C:/FUNuage/Symbols/symbols.json").writeString(outputJSON)
 
+    localVfs("C:/FUNuage/Symbols/symbols.json").writeString(outputJSON)
 }
 
 private suspend fun extractSymInfo(symDir: List<String>):List<Symbol> {
